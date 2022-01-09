@@ -291,57 +291,6 @@ const macro_t *macroAction(uint8_t macroIndex, uint8_t keyState) {
       return MACRO(T(NonUsBackslashAndPipe), D(LeftShift), T(NonUsBackslashAndPipe), U(LeftShift), T(LeftArrow));
     }
     break;
-    break;
-  case M_ALT_1:
-    if (keyToggledOn(keyState)) {
-      return MACRO(D(LeftAlt), T(1));
-    }
-    break;
-  case M_ALT_2:
-    if (keyToggledOn(keyState)) {
-      return MACRO(D(LeftAlt), T(2));
-    }
-    break;
-  case M_ALT_3:
-    if (keyToggledOn(keyState)) {
-      return MACRO(D(LeftAlt), T(3));
-    }
-    break;
-  case M_ALT_4:
-    if (keyToggledOn(keyState)) {
-      return MACRO(D(LeftAlt), T(4));
-    }
-    break;
-  case M_ALT_5:
-    if (keyToggledOn(keyState)) {
-      return MACRO(D(LeftAlt), T(5));
-    }
-    break;
-  case M_ALT_6:
-    if (keyToggledOn(keyState)) {
-      return MACRO(D(LeftAlt), T(6));
-    }
-    break;
-  case M_ALT_7:
-    if (keyToggledOn(keyState)) {
-      return MACRO(D(LeftAlt), T(7));
-    }
-    break;
-  case M_ALT_8:
-    if (keyToggledOn(keyState)) {
-      return MACRO(D(LeftAlt), T(8));
-    }
-    break;
-  case M_ALT_9:
-    if (keyToggledOn(keyState)) {
-      return MACRO(D(LeftAlt), T(9));
-    }
-    break;
-  case M_ALT_0:
-    if (keyToggledOn(keyState)) {
-      return MACRO(D(LeftAlt), T(0));
-    }
-    break;
   default:
     break;
   }
@@ -353,15 +302,15 @@ void setup() {
   Kaleidoscope.setup();
   SpaceCadet.disable();
   QUKEYS(
-      kaleidoscope::plugin::Qukey(QWERTY, KeyAddr(0, 0), M(M_ALT_1)),
-      kaleidoscope::plugin::Qukey(QWERTY, KeyAddr(0, 1), M(M_ALT_2)),
-      kaleidoscope::plugin::Qukey(QWERTY, KeyAddr(0, 2), M(M_ALT_3)),
-      kaleidoscope::plugin::Qukey(QWERTY, KeyAddr(0, 3), M(M_ALT_4)),
-      kaleidoscope::plugin::Qukey(QWERTY, KeyAddr(0, 4), M(M_ALT_5)),
-      kaleidoscope::plugin::Qukey(QWERTY, KeyAddr(0, 7), M(M_ALT_6)),
-      kaleidoscope::plugin::Qukey(QWERTY, KeyAddr(0, 8), M(M_ALT_7)),
-      kaleidoscope::plugin::Qukey(QWERTY, KeyAddr(0, 9), M(M_ALT_8)),
-      kaleidoscope::plugin::Qukey(QWERTY, KeyAddr(0, 10), M(M_ALT_9)),
+      kaleidoscope::plugin::Qukey(QWERTY, KeyAddr(0, 0), LALT(Key_1)),
+      kaleidoscope::plugin::Qukey(QWERTY, KeyAddr(0, 1), LALT(Key_2)),
+      kaleidoscope::plugin::Qukey(QWERTY, KeyAddr(0, 2), LALT(Key_3)),
+      kaleidoscope::plugin::Qukey(QWERTY, KeyAddr(0, 3), LALT(Key_4)),
+      kaleidoscope::plugin::Qukey(QWERTY, KeyAddr(0, 4), LALT(Key_5)),
+      kaleidoscope::plugin::Qukey(QWERTY, KeyAddr(0, 7), LALT(Key_6)),
+      kaleidoscope::plugin::Qukey(QWERTY, KeyAddr(0, 8), LALT(Key_7)),
+      kaleidoscope::plugin::Qukey(QWERTY, KeyAddr(0, 9), LALT(Key_8)),
+      kaleidoscope::plugin::Qukey(QWERTY, KeyAddr(0, 10), LALT(Key_9)),
       kaleidoscope::plugin::Qukey(QWERTY, KeyAddr(0, 11), M(M_ALT_0)),
       kaleidoscope::plugin::Qukey(QWERTY, KeyAddr(2, 2), LSHIFT(Key_8)),
       kaleidoscope::plugin::Qukey(QWERTY, KeyAddr(2, 9), LSHIFT(Key_9)),
@@ -371,6 +320,7 @@ void setup() {
       kaleidoscope::plugin::Qukey(QWERTY, KeyAddr(2, 10), RALT(Key_0)),
       kaleidoscope::plugin::Qukey(QWERTY, KeyAddr(2, 0), RALT(Key_8)),
       kaleidoscope::plugin::Qukey(QWERTY, KeyAddr(2, 11), RALT(Key_9)),
+      kaleidoscope::plugin::Qukey(QWERTY, KeyAddr(2, 4), LSHIFT(Key_0)),
       );
   /*
       */
