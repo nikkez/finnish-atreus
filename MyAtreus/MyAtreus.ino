@@ -46,16 +46,8 @@ enum {
   M_CARET,
   M_PARENTHESIS,
   M_ANGLES,
-  M_ALT_1,
-  M_ALT_2,
-  M_ALT_3,
-  M_ALT_4,
-  M_ALT_5,
-  M_ALT_6,
-  M_ALT_7,
-  M_ALT_8,
-  M_ALT_9,
-  M_ALT_0,
+  M_DOUBLE_EQUALS,
+  M_ALT_SHIFT_COMMA,
 };
 
 #define Key_Exclamation LSHIFT(Key_1)
@@ -76,7 +68,6 @@ enum {
 #define FI_Key_auml Key_Quote
 #define FI_Key_aring Key_LeftBracket
 #define FI_Key_Plus Key_Minus
-#define FI_Key_Minus Key_Minus
 #define FI_Key_Quote Key_Backslash
 #define FI_Key_Doublequote LSHIFT(Key_2)
 #define FI_Key_LeftParen LSHIFT(Key_8)
@@ -96,6 +87,8 @@ enum {
 enum {
   QWERTY,
   LAYER_1,
+  LAYER_2,
+  DWM,
   FUN,
   UPPER,
   SCAND_AND_F_KEYS,
@@ -114,19 +107,43 @@ KEYMAPS(
                                ,Key_Y       ,Key_U        ,Key_I                    ,Key_O                        ,Key_P
                                ,Key_H       ,Key_J        ,Key_K                    ,Key_L                        ,M(M_SEMICOLON_AND_COLON)
       ,M(M_BACKSLASH_AND_PIPE) ,Key_N       ,Key_M        ,M(M_COMMA_AND_LESS_THAN) ,M(M_PERIOD_AND_GREATER_THAN) ,M(M_SLASH_AND_QUESTIONMARK)
-      ,TG(LAYER_1)             ,Key_Space   ,MO(FUN)      ,FI_Key_Minus             ,M(M_QUOTE_AND_DOUBLEQUOTE)   ,Key_Enter
+      ,MO(DWM)                 ,Key_Space   ,MO(FUN)      ,FI_Key_Minus             ,M(M_QUOTE_AND_DOUBLEQUOTE)   ,Key_Enter
   ),
   [LAYER_1] = KEYMAP_STACKED
   (
        Key_1  ,Key_2 ,Key_3 ,Key_4  ,Key_5
+      ,Key_LeftControl    ,Key_LeftShift   ,___   ,Key_LeftAlt    ,___
+      ,___    ,___   ,M(M_PARENTHESIS)   ,___    ,___    ,___
+      ,___    ,___   ,___   ,___    ,___    ,Key_Escape
+
+                   ,Key_6         ,Key_7         ,Key_8             ,Key_9          ,Key_0
+                   ,Key_LeftArrow ,Key_DownArrow ,Key_UpArrow       ,Key_RightArrow ,___
+      ,___         ,___           ,___           ,___               ,___            ,___
+      ,TG(LAYER_2) ,ML(QWERTY)    ,___           ,___               ,___            ,___
+   ),
+  [LAYER_2] = KEYMAP_STACKED
+  (
+       ___    ,___   ,___   ,___    ,___
       ,___    ,___   ,___   ,___    ,___
       ,___    ,___   ,___   ,___    ,___    ,___
       ,___    ,___   ,___   ,___    ,___    ,___
 
-              ,Key_6         ,Key_7         ,Key_8             ,Key_9          ,Key_0
-              ,Key_LeftArrow ,Key_DownArrow ,Key_UpArrow       ,Key_RightArrow ,___
-      ,___    ,___           ,___           ,___               ,___            ,___
-      ,___    ,ML(QWERTY)    ,___           ,___               ,___            ,___
+                   ,___           ,Key_mouseBtnL   ,Key_mouseBtnM     ,Key_mouseBtnR  ,Key_mouseScrollUp
+                   ,Key_mouseL    ,Key_mouseDn     ,Key_mouseUp       ,Key_mouseR     ,Key_mouseScrollDn
+      ,___         ,___           ,___             ,___               ,___            ,___
+      ,ML(LAYER_1) ,ML(QWERTY)    ,___             ,___               ,___            ,___
+   ),
+  [DWM] = KEYMAP_STACKED
+  (
+       LALT(Key_1) ,LALT(Key_2)  ,LALT(Key_3)   ,LALT(Key_4)    ,LALT(Key_5)
+      ,___         ,___          ,___           ,___            ,___
+      ,___         ,___          ,LALT(Key_C)   ,___            ,___         ,___
+      ,___         ,___          ,___           ,___            ,___         ,___
+
+             ,LALT(Key_6) ,LALT(Key_7) ,LALT(Key_8)      ,LALT(Key_9)       ,LALT(Key_0)
+             ,___         ,LALT(Key_J) ,LALT(Key_K)      ,___               ,___
+       ,___  ,___         ,___         ,LALT(Key_Comma)  ,LALT(Key_Period)  ,___
+       ,___  ,___         ,___         ,___              ,___               ,___
    ),
   [FUN] = KEYMAP_STACKED
   (
@@ -207,6 +224,7 @@ KALEIDOSCOPE_INIT_PLUGINS(
 
 const macro_t *macroAction(uint8_t macroIndex, uint8_t keyState) {
   bool left_shift = kaleidoscope::Runtime.hid().keyboard().isModifierKeyActive(Key_LeftShift);
+  bool left_alt = kaleidoscope::Runtime.hid().keyboard().isModifierKeyActive(Key_LeftAlt);
   switch (macroIndex) {
   case MACRO_VERSION_INFO:
     if (keyToggledOn(keyState)) {
@@ -243,7 +261,9 @@ const macro_t *macroAction(uint8_t macroIndex, uint8_t keyState) {
     break;
   case M_COMMA_AND_LESS_THAN:
     if (keyToggledOn(keyState)) {
-      if (left_shift) {
+      if (left_shift && left_alt) {
+        return MACRO(T(Comma));
+      } else if (left_shift) {
         return MACRO(U(LeftShift), T(NonUsBackslashAndPipe));
       } else {
         return MACRO(T(Comma));
@@ -252,7 +272,10 @@ const macro_t *macroAction(uint8_t macroIndex, uint8_t keyState) {
     break;
   case M_PERIOD_AND_GREATER_THAN:
     if (keyToggledOn(keyState)) {
-      if (left_shift) {
+      if (left_shift && left_alt) {
+        return MACRO(T(Period));
+      }
+      else if (left_shift) {
         return MACRO(T(NonUsBackslashAndPipe));
       } else {
         return MACRO(T(Period));
@@ -291,6 +314,16 @@ const macro_t *macroAction(uint8_t macroIndex, uint8_t keyState) {
       return MACRO(T(NonUsBackslashAndPipe), D(LeftShift), T(NonUsBackslashAndPipe), U(LeftShift), T(LeftArrow));
     }
     break;
+  case M_DOUBLE_EQUALS:
+    if (keyToggledOn(keyState)) {
+      return MACRO(D(LeftShift), T(0), T(0));
+    }
+    break;
+  case M_ALT_SHIFT_COMMA:
+    if (keyToggledOn(keyState)) {
+      return MACRO(D(LeftShift), D(LeftAlt), T(Comma)); 
+    }
+    break;
   default:
     break;
   }
@@ -301,6 +334,7 @@ const macro_t *macroAction(uint8_t macroIndex, uint8_t keyState) {
 void setup() {
   Kaleidoscope.setup();
   SpaceCadet.disable();
+  /*
   QUKEYS(
       kaleidoscope::plugin::Qukey(QWERTY, KeyAddr(0, 0), LALT(Key_1)),
       kaleidoscope::plugin::Qukey(QWERTY, KeyAddr(0, 1), LALT(Key_2)),
@@ -311,7 +345,7 @@ void setup() {
       kaleidoscope::plugin::Qukey(QWERTY, KeyAddr(0, 8), LALT(Key_7)),
       kaleidoscope::plugin::Qukey(QWERTY, KeyAddr(0, 9), LALT(Key_8)),
       kaleidoscope::plugin::Qukey(QWERTY, KeyAddr(0, 10), LALT(Key_9)),
-      kaleidoscope::plugin::Qukey(QWERTY, KeyAddr(0, 11), M(M_ALT_0)),
+      kaleidoscope::plugin::Qukey(QWERTY, KeyAddr(0, 11), LALT(Key_0)),
       kaleidoscope::plugin::Qukey(QWERTY, KeyAddr(2, 2), LSHIFT(Key_8)),
       kaleidoscope::plugin::Qukey(QWERTY, KeyAddr(2, 9), LSHIFT(Key_9)),
       kaleidoscope::plugin::Qukey(QWERTY, KeyAddr(2, 3), Key_NonUsBackslashAndPipe),
@@ -321,8 +355,10 @@ void setup() {
       kaleidoscope::plugin::Qukey(QWERTY, KeyAddr(2, 0), RALT(Key_8)),
       kaleidoscope::plugin::Qukey(QWERTY, KeyAddr(2, 11), RALT(Key_9)),
       kaleidoscope::plugin::Qukey(QWERTY, KeyAddr(2, 4), LSHIFT(Key_0)),
+      kaleidoscope::plugin::Qukey(QWERTY, KeyAddr(2, 7), M(M_DOUBLE_EQUALS)),
+      kaleidoscope::plugin::Qukey(QWERTY, KeyAddr(2, 5), LSHIFT(Key_Backslash)),
+      kaleidoscope::plugin::Qukey(QWERTY, KeyAddr(2, 6), Key_Minus),
       );
-  /*
       */
 }
 
