@@ -114,7 +114,7 @@ KEYMAPS(
                                ,Key_Y       ,Key_U        ,Key_I                    ,Key_O                        ,Key_P
                                ,Key_H       ,Key_J        ,Key_K                    ,Key_L                        ,M(M_SEMICOLON_AND_COLON)
       ,M(M_BACKSLASH_AND_PIPE) ,Key_N       ,Key_M        ,M(M_COMMA_AND_LESS_THAN) ,M(M_PERIOD_AND_GREATER_THAN) ,M(M_SLASH_AND_QUESTIONMARK)
-      ,___                     ,Key_Space   ,MO(FUN)      ,FI_Key_Minus             ,M(M_QUOTE_AND_DOUBLEQUOTE)   ,Key_Enter
+      ,TG(LAYER_1)             ,Key_Space   ,MO(FUN)      ,FI_Key_Minus             ,M(M_QUOTE_AND_DOUBLEQUOTE)   ,Key_Enter
   ),
   [LAYER_1] = KEYMAP_STACKED
   (
@@ -217,67 +217,54 @@ const macro_t *macroAction(uint8_t macroIndex, uint8_t keyState) {
   case M_BACKTICK_AND_TILDE:
     if (keyToggledOn(keyState)) {
       if (left_shift) {
-        kaleidoscope::Runtime.hid().keyboard().releaseRawKey(Key_LeftShift);
-        kaleidoscope::Runtime.hid().keyboard().pressRawKey(Key_RightAlt);
-        kaleidoscope::Runtime.hid().keyboard().pressRawKey(Key_RightCurlyBracket);
-        kaleidoscope::Runtime.hid().keyboard().sendReport();
-        kaleidoscope::Runtime.hid().keyboard().pressRawKey(Key_Space);
+        return MACRO(U(LeftShift), D(RightAlt), T(RightBracket), U(RightAlt), T(Space));
       } else {
-        kaleidoscope::Runtime.hid().keyboard().pressRawKey(Key_LeftShift);
-        kaleidoscope::Runtime.hid().keyboard().pressRawKey(Key_Equals);
-        kaleidoscope::Runtime.hid().keyboard().sendReport();
-        kaleidoscope::Runtime.hid().keyboard().pressRawKey(Key_Space);
+        return MACRO(D(LeftShift), T(Equals), U(LeftShift), T(Space));
       }
     }
     break;
   case M_SEMICOLON_AND_COLON:
     if (keyToggledOn(keyState)) {
       if (left_shift) {
-        kaleidoscope::Runtime.hid().keyboard().pressRawKey(Key_Period);
+        return MACRO(T(Period));
       } else {
-        kaleidoscope::Runtime.hid().keyboard().pressRawKey(Key_LeftShift);
-        kaleidoscope::Runtime.hid().keyboard().pressRawKey(Key_Comma);
+        return MACRO(D(LeftShift), T(Comma));
       }
     }
     break;
   case M_BACKSLASH_AND_PIPE:
     if (keyToggledOn(keyState)) {
       if (left_shift) {
-        kaleidoscope::Runtime.hid().keyboard().releaseRawKey(Key_LeftShift);
-        kaleidoscope::Runtime.hid().keyboard().pressRawKey(Key_RightAlt);
-        kaleidoscope::Runtime.hid().keyboard().pressRawKey(Key_NonUsBackslashAndPipe);
+        return MACRO(U(LeftShift), D(RightAlt), T(NonUsBackslashAndPipe));
       } else {
-        kaleidoscope::Runtime.hid().keyboard().pressRawKey(Key_RightAlt);
-        kaleidoscope::Runtime.hid().keyboard().pressRawKey(Key_Minus);
+        return MACRO(D(RightAlt), T(Minus));
       }
     }
     break;
   case M_COMMA_AND_LESS_THAN:
     if (keyToggledOn(keyState)) {
       if (left_shift) {
-        kaleidoscope::Runtime.hid().keyboard().releaseRawKey(Key_LeftShift);
-        kaleidoscope::Runtime.hid().keyboard().pressRawKey(Key_NonUsBackslashAndPipe);
+        return MACRO(U(LeftShift), T(NonUsBackslashAndPipe));
       } else {
-        kaleidoscope::Runtime.hid().keyboard().pressRawKey(Key_Comma);
+        return MACRO(T(Comma));
       }
     }
     break;
   case M_PERIOD_AND_GREATER_THAN:
     if (keyToggledOn(keyState)) {
       if (left_shift) {
-        kaleidoscope::Runtime.hid().keyboard().pressRawKey(Key_NonUsBackslashAndPipe);
+        return MACRO(T(NonUsBackslashAndPipe));
       } else {
-        kaleidoscope::Runtime.hid().keyboard().pressRawKey(Key_Period);
+        return MACRO(T(Period));
       }
     }
     break;
   case M_SLASH_AND_QUESTIONMARK:
     if (keyToggledOn(keyState)) {
       if (left_shift) {
-        kaleidoscope::Runtime.hid().keyboard().pressRawKey(Key_Minus);
+        return MACRO(T(Minus));
       } else {
-        kaleidoscope::Runtime.hid().keyboard().pressRawKey(Key_LeftShift);
-        kaleidoscope::Runtime.hid().keyboard().pressRawKey(Key_7);
+        return MACRO(D(LeftShift), T(7));
       }
     }
     break;
@@ -285,21 +272,14 @@ const macro_t *macroAction(uint8_t macroIndex, uint8_t keyState) {
     if (keyToggledOn(keyState)) {
       if (left_shift) {
         return MACRO(T(2));
-        //kaleidoscope::Runtime.hid().keyboard().pressRawKey(Key_2);
       } else {
         return MACRO(T(Backslash));
-        //kaleidoscope::Runtime.hid().keyboard().pressRawKey(Key_Backslash);
       }
     }
     break;
   case M_CARET:
     if (keyToggledOn(keyState)) {
-      if (!left_shift) {
-        kaleidoscope::Runtime.hid().keyboard().pressRawKey(Key_LeftShift);
-      }
-      kaleidoscope::Runtime.hid().keyboard().pressRawKey(Key_RightBracket);
-      kaleidoscope::Runtime.hid().keyboard().sendReport();
-      kaleidoscope::Runtime.hid().keyboard().pressRawKey(Key_Space);
+      return MACRO(D(LeftShift), T(RightBracket), U(LeftShift), T(Space));
     }
     break;
   case M_PARENTHESIS:
@@ -389,6 +369,8 @@ void setup() {
       kaleidoscope::plugin::Qukey(QWERTY, KeyAddr(2, 8), LSHIFT(Key_NonUsBackslashAndPipe)),
       kaleidoscope::plugin::Qukey(QWERTY, KeyAddr(2, 1), RALT(Key_7)),
       kaleidoscope::plugin::Qukey(QWERTY, KeyAddr(2, 10), RALT(Key_0)),
+      kaleidoscope::plugin::Qukey(QWERTY, KeyAddr(2, 0), RALT(Key_8)),
+      kaleidoscope::plugin::Qukey(QWERTY, KeyAddr(2, 11), RALT(Key_9)),
       );
   /*
       */
