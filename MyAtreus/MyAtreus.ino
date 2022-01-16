@@ -48,6 +48,7 @@ enum {
   M_ANGLES,
   M_DOUBLE_EQUALS,
   M_ALT_SHIFT_COMMA,
+  M_ALT_SHIFT_X_T,
 };
 
 #define Key_Exclamation LSHIFT(Key_1)
@@ -83,6 +84,7 @@ enum {
 #define FI_Key_Pipe RALT(Key_NonUsBackslashAndPipe)
 #define FI_Key_And LSHIFT(Key_6)
 #define FI_Key_Star LSHIFT(Key_Backslash)
+#define Key_PA2 LALT(Key_Home)
 
 enum {
   QWERTY,
@@ -101,7 +103,7 @@ KEYMAPS(
        Key_Q                   ,Key_W       ,Key_E        ,Key_R                    ,Key_T
       ,LT(SCAND_AND_F_KEYS, A) ,Key_S       ,Key_D        ,Key_F                    ,Key_G
       ,Key_Z                   ,Key_X       ,Key_C        ,Key_V                    ,Key_B                        ,M(M_BACKTICK_AND_TILDE)
-      ,Key_Tab                 ,Key_LeftGui ,Key_LeftAlt  ,Key_LeftShift            ,Key_Backspace                ,CTL_T(Escape)
+      ,CTL_T(Tab)              ,Key_LeftGui ,Key_LeftAlt  ,Key_LeftShift            ,Key_Backspace                ,ALT_T(Escape)
       
 
                                ,Key_Y       ,Key_U        ,Key_I                    ,Key_O                        ,Key_P
@@ -135,27 +137,27 @@ KEYMAPS(
    ),
   [DWM] = KEYMAP_STACKED
   (
-       LALT(Key_1) ,LALT(Key_2)  ,LALT(Key_3)   ,LALT(Key_4)    ,LALT(Key_5)
-      ,___         ,___          ,___           ,___            ,___
-      ,___         ,___          ,LALT(Key_C)   ,___            ,___         ,___
-      ,___         ,___          ,___           ,___            ,___         ,___
+       LALT(Key_1)          ,LALT(Key_2)         ,LALT(Key_3)               ,LALT(Key_4)    ,LALT(Key_5)
+      ,LALT(LSHIFT(Key_C))  ,___                 ,LCTRL(LALT(Key_Delete))   ,___            ,Key_Insert
+      ,___                  ,M(M_ALT_SHIFT_X_T)  ,LALT(Key_C)               ,___            ,Key_Delete   ,___
+      ,___                  ,___                 ,___                       ,___            ,___          ,___
 
-             ,LALT(Key_6) ,LALT(Key_7) ,LALT(Key_8)      ,LALT(Key_9)       ,LALT(Key_0)
-             ,___         ,LALT(Key_J) ,LALT(Key_K)      ,___               ,___
-       ,___  ,___         ,___         ,LALT(Key_Comma)  ,LALT(Key_Period)  ,___
-       ,___  ,___         ,___         ,___              ,___               ,___
+             ,LALT(Key_6) ,LALT(Key_7)  ,LALT(Key_8)      ,LALT(Key_9)       ,LALT(Key_0)
+             ,___         ,LALT(Key_J)  ,LALT(Key_K)      ,___               ,LALT(LSHIFT(Key_Enter))
+       ,___  ,___         ,LALT(Key_F5) ,LALT(Key_Comma)  ,LALT(Key_Period)  ,___
+       ,___  ,___         ,___          ,___              ,___               ,___
    ),
   [FUN] = KEYMAP_STACKED
   (
        Key_Exclamation    ,FI_Key_At           ,Key_UpArrow   ,FI_Key_Dollar         ,Key_Percent
       ,FI_Key_LeftParen   ,Key_LeftArrow       ,Key_DownArrow ,Key_RightArrow        ,FI_Key_RightParen
       ,FI_Key_LeftBracket ,FI_Key_RightBracket ,Key_Hash      ,FI_Key_LeftCurlyBrace ,FI_Key_RightCurlyBrace ,M(M_CARET)
-      ,TG(UPPER)          ,___                 ,___           ,___                   ,___                    ,___
+      ,TG(UPPER)          ,Key_PageUp          ,Key_PageDown  ,___                   ,___                    ,___
 
                           ,Key_PageUp          ,Key_7         ,Key_8                 ,Key_9                  ,Key_Percent
                           ,Key_PageDown        ,Key_4         ,Key_5                 ,Key_6                  ,___
       ,FI_Key_And         ,FI_Key_Star         ,Key_1         ,Key_2                 ,Key_3                  ,FI_Key_Plus
-      ,___                ,___                 ,___           ,___                   ,Key_0                  ,FI_Key_Equals
+      ,___                ,___                 ,___           ,Key_LeftShift         ,Key_0                  ,FI_Key_Equals
    ),
       /*
   [FUN] = KEYMAP_STACKED
@@ -200,15 +202,15 @@ KEYMAPS(
 
   [SCAND_AND_F_KEYS] = KEYMAP_STACKED
   (
-       Key_mouseScrollUp ,___           ,Key_mouseUp        ,___           ,___
-      ,Key_mouseScrollDn ,Key_mouseL    ,Key_mouseDn        ,Key_mouseR    ,___
-      ,___               ,Key_mouseBtnL ,Key_mouseBtnM      ,Key_mouseBtnR ,___         ,___
+       ___               ,___           ,___                ,___           ,___
+      ,___               ,___           ,___                ,___           ,___
       ,___               ,___           ,___                ,___           ,___         ,___
+      ,Key_LeftControl   ,___           ,___                ,___           ,___         ,Key_LeftControl
 
-                         ,Key_F1        ,Key_F2             ,Key_F3        ,___         ,FI_Key_aring
-                         ,Key_F4        ,Key_F5             ,Key_F6        ,FI_Key_ouml ,FI_Key_auml
-      ,___               ,Key_F7        ,Key_F8             ,Key_F9        ,Key_Keypad3 ,___
-      ,___               ,Key_F10       ,Key_F11            ,Key_F12       ,___         ,Key_KeypadEnter
+                         ,Key_F1        ,Key_F2             ,Key_F3        ,___             ,FI_Key_aring
+                         ,Key_F4        ,Key_F5             ,Key_F6        ,FI_Key_ouml     ,FI_Key_auml
+      ,___               ,Key_F7        ,Key_F8             ,Key_F9        ,Key_PA2         ,___
+      ,___               ,Key_F10       ,Key_F11            ,Key_F12       ,___             ,Key_KeypadEnter
    ),
 
 )
@@ -322,6 +324,11 @@ const macro_t *macroAction(uint8_t macroIndex, uint8_t keyState) {
   case M_ALT_SHIFT_COMMA:
     if (keyToggledOn(keyState)) {
       return MACRO(D(LeftShift), D(LeftAlt), T(Comma)); 
+    }
+    break;
+  case M_ALT_SHIFT_X_T:
+    if (keyToggledOn(keyState)) {
+      return MACRO(D(LeftAlt), D(LeftShift), T(X), U(LeftAlt), U(LeftShift), T(T)); 
     }
     break;
   default:
