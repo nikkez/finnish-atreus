@@ -88,9 +88,7 @@ enum {
 
 enum {
   QWERTY,
-  LAYER_1,
-  LAYER_2,
-  DWM,
+  OMEGA,
   FUN,
   UPPER,
   SCAND_AND_F_KEYS,
@@ -103,50 +101,26 @@ KEYMAPS(
        Key_Q                   ,Key_W       ,Key_E        ,Key_R                    ,Key_T
       ,LT(SCAND_AND_F_KEYS, A) ,Key_S       ,Key_D        ,Key_F                    ,Key_G
       ,Key_Z                   ,Key_X       ,Key_C        ,Key_V                    ,Key_B                        ,M(M_BACKTICK_AND_TILDE)
-      ,CTL_T(Tab)              ,Key_LeftGui ,Key_LeftAlt  ,Key_LeftShift            ,Key_Backspace                ,ALT_T(Escape)
+      ,Key_LeftControl         ,Key_LeftGui ,Key_Tab      ,Key_LeftShift            ,Key_Backspace                ,Key_LeftAlt
       
 
                                ,Key_Y       ,Key_U        ,Key_I                    ,Key_O                        ,Key_P
                                ,Key_H       ,Key_J        ,Key_K                    ,Key_L                        ,M(M_SEMICOLON_AND_COLON)
       ,M(M_BACKSLASH_AND_PIPE) ,Key_N       ,Key_M        ,M(M_COMMA_AND_LESS_THAN) ,M(M_PERIOD_AND_GREATER_THAN) ,M(M_SLASH_AND_QUESTIONMARK)
-      ,MO(DWM)                 ,Key_Space   ,MO(FUN)      ,FI_Key_Minus             ,M(M_QUOTE_AND_DOUBLEQUOTE)   ,Key_Enter
+      ,MO(OMEGA)                 ,Key_Space   ,MO(FUN),FI_Key_Minus             ,M(M_QUOTE_AND_DOUBLEQUOTE)   ,Key_Enter
   ),
-  [LAYER_1] = KEYMAP_STACKED
-  (
-       Key_1  ,Key_2 ,Key_3 ,Key_4  ,Key_5
-      ,Key_LeftControl    ,Key_LeftShift   ,___   ,Key_LeftAlt    ,___
-      ,___    ,___   ,M(M_PARENTHESIS)   ,___    ,___    ,___
-      ,___    ,___   ,___   ,___    ,___    ,Key_Escape
-
-                   ,Key_6         ,Key_7         ,Key_8             ,Key_9          ,Key_0
-                   ,Key_LeftArrow ,Key_DownArrow ,Key_UpArrow       ,Key_RightArrow ,___
-      ,___         ,___           ,___           ,___               ,___            ,___
-      ,TG(LAYER_2) ,ML(QWERTY)    ,___           ,___               ,___            ,___
-   ),
-  [LAYER_2] = KEYMAP_STACKED
-  (
-       ___    ,___   ,___   ,___    ,___
-      ,___    ,___   ,___   ,___    ,___
-      ,___    ,___   ,___   ,___    ,___    ,___
-      ,___    ,___   ,___   ,___    ,___    ,___
-
-                   ,___           ,Key_mouseBtnL   ,Key_mouseBtnM     ,Key_mouseBtnR  ,Key_mouseScrollUp
-                   ,Key_mouseL    ,Key_mouseDn     ,Key_mouseUp       ,Key_mouseR     ,Key_mouseScrollDn
-      ,___         ,___           ,___             ,___               ,___            ,___
-      ,ML(LAYER_1) ,ML(QWERTY)    ,___             ,___               ,___            ,___
-   ),
-  [DWM] = KEYMAP_STACKED
+  [OMEGA] = KEYMAP_STACKED
   (
        LALT(Key_1)          ,LALT(Key_2)         ,LALT(Key_3)               ,LALT(Key_4)    ,LALT(Key_5)
-      ,LALT(LSHIFT(Key_C))  ,___                 ,LCTRL(LALT(Key_Delete))   ,___            ,Key_Insert
-      ,___                  ,M(M_ALT_SHIFT_X_T)  ,LALT(Key_C)               ,___            ,Key_Delete   ,___
-      ,___                  ,___                 ,___                       ,___            ,___          ,___
+      ,XXX                  ,XXX                 ,LCTRL(LALT(Key_Delete))   ,XXX            ,Key_Insert
+      ,XXX                  ,M(M_ALT_SHIFT_X_T)  ,XXX                       ,XXX            ,Key_Delete   ,XXX
+      ,XXX                  ,XXX                 ,XXX                       ,XXX            ,XXX          ,XXX
 
              ,LALT(Key_6) ,LALT(Key_7)  ,LALT(Key_8)      ,LALT(Key_9)       ,LALT(Key_0)
-             ,___         ,LALT(Key_J)  ,LALT(Key_K)      ,___               ,LALT(LSHIFT(Key_Enter))
-       ,___  ,___         ,LALT(Key_F5) ,LALT(Key_Comma)  ,LALT(Key_Period)  ,___
-       ,___  ,___         ,___          ,___              ,___               ,___
-   ),
+             ,XXX         ,XXX          ,XXX              ,XXX               ,XXX
+       ,XXX  ,XXX         ,LALT(Key_F5) ,XXX              ,XXX               ,XXX
+       ,XXX  ,XXX         ,XXX          ,XXX              ,XXX               ,XXX
+  ),
   [FUN] = KEYMAP_STACKED
   (
        Key_Exclamation    ,FI_Key_At           ,Key_UpArrow   ,FI_Key_Dollar         ,Key_Percent
@@ -159,34 +133,6 @@ KEYMAPS(
       ,FI_Key_And         ,FI_Key_Star         ,Key_1         ,Key_2                 ,Key_3                  ,FI_Key_Plus
       ,___                ,___                 ,___           ,Key_LeftShift         ,Key_0                  ,FI_Key_Equals
    ),
-      /*
-  [FUN] = KEYMAP_STACKED
-  (
-        ___  ,___ ,___ ,___  ,___
-       ,___  ,___ ,___ ,___  ,___
-       ,___  ,___ ,___ ,___  ,___  ,___
-       ,___  ,___ ,___ ,___  ,___  ,___
-
-             ,___ ,___ ,___  ,___  ,___
-             ,___ ,___ ,___  ,___  ,___
-       ,___  ,___ ,___ ,___  ,___  ,___
-       ,___  ,___ ,___ ,___  ,___  ,___
-   ),
-   */
-  /*
-  [FUN] = KEYMAP_STACKED
-  (
-       ___  ,___ ,___ ,___  ,___
-      ,___  ,___ ,___ ,___  ,___
-      ,___  ,___ ,___ ,___  ,___ ,___
-      ,___  ,___ ,___ ,___  ,___ ,___
-
-            ,___ ,___ ,___  ,___ ,___
-            ,___ ,___ ,___  ,___ ,___
-      ,___  ,___ ,___ ,___  ,___ ,___
-      ,___  ,___ ,___ ,___  ,___ ,___
-   ),
-   */
   [UPPER] = KEYMAP_STACKED
   (
        Key_Insert            ,Key_Home                 ,Key_UpArrow         ,Key_End         ,Key_PageUp
@@ -202,15 +148,15 @@ KEYMAPS(
 
   [SCAND_AND_F_KEYS] = KEYMAP_STACKED
   (
-       ___               ,___           ,___                ,___           ,___
-      ,___               ,___           ,___                ,___           ,___
-      ,___               ,___           ,___                ,___           ,___         ,___
-      ,Key_LeftControl   ,___           ,___                ,___           ,___         ,Key_LeftControl
+       XXX               ,XXX           ,XXX                ,XXX           ,XXX
+      ,XXX               ,XXX           ,XXX                ,XXX           ,XXX
+      ,XXX               ,XXX           ,XXX                ,XXX           ,XXX             ,XXX
+      ,XXX               ,XXX           ,XXX                ,Key_LeftShift ,XXX             ,Key_Escape
 
-                         ,Key_F1        ,Key_F2             ,Key_F3        ,___             ,FI_Key_aring
+                         ,Key_F1        ,Key_F2             ,Key_F3        ,XXX             ,FI_Key_aring
                          ,Key_F4        ,Key_F5             ,Key_F6        ,FI_Key_ouml     ,FI_Key_auml
-      ,___               ,Key_F7        ,Key_F8             ,Key_F9        ,Key_PA2         ,___
-      ,___               ,Key_F10       ,Key_F11            ,Key_F12       ,___             ,Key_KeypadEnter
+      ,XXX               ,Key_F7        ,Key_F8             ,Key_F9        ,Key_PA2         ,XXX
+      ,Key_RightControl  ,Key_F10       ,Key_F11            ,Key_F12       ,XXX             ,Key_KeypadEnter
    ),
 
 )
@@ -341,32 +287,6 @@ const macro_t *macroAction(uint8_t macroIndex, uint8_t keyState) {
 void setup() {
   Kaleidoscope.setup();
   SpaceCadet.disable();
-  /*
-  QUKEYS(
-      kaleidoscope::plugin::Qukey(QWERTY, KeyAddr(0, 0), LALT(Key_1)),
-      kaleidoscope::plugin::Qukey(QWERTY, KeyAddr(0, 1), LALT(Key_2)),
-      kaleidoscope::plugin::Qukey(QWERTY, KeyAddr(0, 2), LALT(Key_3)),
-      kaleidoscope::plugin::Qukey(QWERTY, KeyAddr(0, 3), LALT(Key_4)),
-      kaleidoscope::plugin::Qukey(QWERTY, KeyAddr(0, 4), LALT(Key_5)),
-      kaleidoscope::plugin::Qukey(QWERTY, KeyAddr(0, 7), LALT(Key_6)),
-      kaleidoscope::plugin::Qukey(QWERTY, KeyAddr(0, 8), LALT(Key_7)),
-      kaleidoscope::plugin::Qukey(QWERTY, KeyAddr(0, 9), LALT(Key_8)),
-      kaleidoscope::plugin::Qukey(QWERTY, KeyAddr(0, 10), LALT(Key_9)),
-      kaleidoscope::plugin::Qukey(QWERTY, KeyAddr(0, 11), LALT(Key_0)),
-      kaleidoscope::plugin::Qukey(QWERTY, KeyAddr(2, 2), LSHIFT(Key_8)),
-      kaleidoscope::plugin::Qukey(QWERTY, KeyAddr(2, 9), LSHIFT(Key_9)),
-      kaleidoscope::plugin::Qukey(QWERTY, KeyAddr(2, 3), Key_NonUsBackslashAndPipe),
-      kaleidoscope::plugin::Qukey(QWERTY, KeyAddr(2, 8), LSHIFT(Key_NonUsBackslashAndPipe)),
-      kaleidoscope::plugin::Qukey(QWERTY, KeyAddr(2, 1), RALT(Key_7)),
-      kaleidoscope::plugin::Qukey(QWERTY, KeyAddr(2, 10), RALT(Key_0)),
-      kaleidoscope::plugin::Qukey(QWERTY, KeyAddr(2, 0), RALT(Key_8)),
-      kaleidoscope::plugin::Qukey(QWERTY, KeyAddr(2, 11), RALT(Key_9)),
-      kaleidoscope::plugin::Qukey(QWERTY, KeyAddr(2, 4), LSHIFT(Key_0)),
-      kaleidoscope::plugin::Qukey(QWERTY, KeyAddr(2, 7), M(M_DOUBLE_EQUALS)),
-      kaleidoscope::plugin::Qukey(QWERTY, KeyAddr(2, 5), LSHIFT(Key_Backslash)),
-      kaleidoscope::plugin::Qukey(QWERTY, KeyAddr(2, 6), Key_Minus),
-      );
-      */
 }
 
 void loop() {

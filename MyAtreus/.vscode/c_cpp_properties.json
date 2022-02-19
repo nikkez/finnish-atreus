@@ -1,0 +1,26 @@
+{
+    "configurations": [
+        {
+            "name": "Win32",
+            "includePath": [
+                "${workspaceFolder}/**",
+                "c:/Users/nikla/AppData/Local/Arduino15/packages/keyboardio/hardware/avr/1.99.5/libraries/Kaleidoscope/src",
+                "c:/Users/nikla/AppData/Local/Arduino15/packages/keyboardio/hardware/avr/1.99.5/libraries/Kaleidoscope-FocusSerial/src",
+                "c:/Users/nikla/AppData/Local/Arduino15/packages/keyboardio/hardware/avr/1.99.5/libraries/Kaleidoscope-Macros/src",
+                "c:/Users/nikla/AppData/Local/Arduino15/packages/keyboardio/hardware/avr/1.99.5/libraries/Kaleidoscope-MouseKeys/src/",
+                "c:/Users/nikla/AppData/Local/Arduino15/packages/keyboardio/hardware/avr/1.99.5/libraries/Kaleidoscope-OneShot/src/",
+                "c:/Users/nikla/AppData/Local/Arduino15/packages/keyboardio/hardware/avr/1.99.5/libraries/Kaleidoscope-Qukeys/src",
+                "c:/Users/nikla/AppData/Local/Arduino15/packages/keyboardio/hardware/avr/1.99.5/libraries/Kaleidoscope-SpaceCadet/src"
+            ],
+            "defines": [
+                "_DEBUG",
+                "UNICODE",
+                "_UNICODE"
+            ],
+            "cStandard": "c17",
+            "cppStandard": "c++17",
+            "intelliSenseMode": "windows-msvc-x64"
+        }
+    ],
+    "version": 4
+}
