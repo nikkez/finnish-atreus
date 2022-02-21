@@ -164,10 +164,7 @@ KEYMAPS(
 
 KALEIDOSCOPE_INIT_PLUGINS(
   Qukeys,
-  SpaceCadet,
-  OneShot,
-  Macros,
-  MouseKeys
+  Macros
 );
 
 const macro_t *macroAction(uint8_t macroIndex, uint8_t keyState) {
@@ -286,7 +283,6 @@ const macro_t *macroAction(uint8_t macroIndex, uint8_t keyState) {
 
 void setup() {
   Kaleidoscope.setup();
-  SpaceCadet.disable();
 }
 
 void loop() {
