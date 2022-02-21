@@ -24,11 +24,9 @@
 #include "Kaleidoscope.h"
 #include "Kaleidoscope-FocusSerial.h"
 #include "Kaleidoscope-Macros.h"
-#include "Kaleidoscope-MouseKeys.h"
-#include "Kaleidoscope-OneShot.h"
 #include "Kaleidoscope-Qukeys.h"
-#include "Kaleidoscope-SpaceCadet.h"
 #include "kaleidoscope/keyswitch_state.h"
+#include "Kaleidoscope-CharShift.h"
 
 #define MO(n) ShiftToLayer(n)
 #define ML(n) MoveToLayer(n)
@@ -39,9 +37,6 @@ enum {
   M_BACKTICK_AND_TILDE,
   M_SEMICOLON_AND_COLON,
   M_BACKSLASH_AND_PIPE,
-  M_COMMA_AND_LESS_THAN,
-  M_PERIOD_AND_GREATER_THAN,
-  M_SLASH_AND_QUESTIONMARK,
   M_QUOTE_AND_DOUBLEQUOTE,
   M_CARET,
   M_PARENTHESIS,
@@ -84,6 +79,8 @@ enum {
 #define FI_Key_Pipe RALT(Key_NonUsBackslashAndPipe)
 #define FI_Key_And LSHIFT(Key_6)
 #define FI_Key_Star LSHIFT(Key_Backslash)
+#define FI_Key_QuestionMark LSHIFT(Key_Minus)
+#define FI_Key_Slash LSHIFT(Key_7)
 #define Key_PA2 LALT(Key_Home)
 
 enum {
@@ -94,20 +91,26 @@ enum {
   SCAND_AND_F_KEYS,
 };
 
+enum CS_FI {
+  COMMA_AND_LESS_THAN,
+  PERIOD_AND_GREATER_THAN,
+  SLASH_AND_QUESTION_MARK
+};
+
 /* *INDENT-OFF* */
 KEYMAPS(
   [QWERTY] = KEYMAP_STACKED
   (
-       Key_Q                   ,Key_W       ,Key_E        ,Key_R                    ,Key_T
-      ,LT(SCAND_AND_F_KEYS, A) ,Key_S       ,Key_D        ,Key_F                    ,Key_G
-      ,Key_Z                   ,Key_X       ,Key_C        ,Key_V                    ,Key_B                        ,M(M_BACKTICK_AND_TILDE)
-      ,Key_LeftControl         ,Key_LeftGui ,Key_Tab      ,Key_LeftShift            ,Key_Backspace                ,Key_LeftAlt
+       Key_Q                   ,Key_W       ,Key_E        ,Key_R             ,Key_T
+      ,LT(SCAND_AND_F_KEYS, A) ,Key_S       ,Key_D        ,Key_F             ,Key_G
+      ,Key_Z                   ,Key_X       ,Key_C        ,Key_V             ,Key_B                       ,M(M_BACKTICK_AND_TILDE)
+      ,Key_LeftControl         ,Key_LeftGui ,Key_Tab      ,Key_LeftShift     ,Key_Backspace               ,Key_LeftAlt
       
 
-                               ,Key_Y       ,Key_U        ,Key_I                    ,Key_O                        ,Key_P
-                               ,Key_H       ,Key_J        ,Key_K                    ,Key_L                        ,M(M_SEMICOLON_AND_COLON)
-      ,M(M_BACKSLASH_AND_PIPE) ,Key_N       ,Key_M        ,M(M_COMMA_AND_LESS_THAN) ,M(M_PERIOD_AND_GREATER_THAN) ,M(M_SLASH_AND_QUESTIONMARK)
-      ,MO(OMEGA)                 ,Key_Space   ,MO(FUN),FI_Key_Minus             ,M(M_QUOTE_AND_DOUBLEQUOTE)   ,Key_Enter
+                               ,Key_Y       ,Key_U        ,Key_I                           ,Key_O                              ,Key_P
+                               ,Key_H       ,Key_J        ,Key_K                           ,Key_L                              ,M(M_SEMICOLON_AND_COLON)
+      ,M(M_BACKSLASH_AND_PIPE) ,Key_N       ,Key_M        ,CS(CS_FI::COMMA_AND_LESS_THAN)  ,CS(CS_FI::PERIOD_AND_GREATER_THAN) ,CS(CS_FI::SLASH_AND_QUESTION_MARK)
+      ,MO(OMEGA)               ,Key_Space   ,MO(FUN)      ,FI_Key_Minus                    ,M(M_QUOTE_AND_DOUBLEQUOTE)         ,Key_Enter
   ),
   [OMEGA] = KEYMAP_STACKED
   (
@@ -162,9 +165,41 @@ KEYMAPS(
 )
 /* *INDENT-ON* */
 
+namespace kaleidoscope {
+namespace plugin {
+
+// When activated, this plugin will suppress any `Shift` key (including modifier
+// combos with `Shift`) before it's added to the HID report.
+class ShiftBlocker : public Plugin {
+
+ public:
+  EventHandlerResult onAddToReport(Key key) {
+    if (active_ && key.isKeyboardShift())
+      return EventHandlerResult::ABORT;
+    return EventHandlerResult::OK;
+  }
+
+  void enable() {
+    active_ = true;
+  }
+  void disable() {
+    active_ = false;
+  }
+
+ private:
+  bool active_{false};
+
+};
+
+} // namespace plugin
+} // namespace kaleidoscope
+
+kaleidoscope::plugin::ShiftBlocker ShiftBlocker;
+
 KALEIDOSCOPE_INIT_PLUGINS(
   Qukeys,
-  Macros
+  Macros,
+  CharShift
 );
 
 const macro_t *macroAction(uint8_t macroIndex, uint8_t keyState) {
@@ -201,38 +236,6 @@ const macro_t *macroAction(uint8_t macroIndex, uint8_t keyState) {
         return MACRO(U(LeftShift), D(RightAlt), T(NonUsBackslashAndPipe));
       } else {
         return MACRO(D(RightAlt), T(Minus));
-      }
-    }
-    break;
-  case M_COMMA_AND_LESS_THAN:
-    if (keyToggledOn(keyState)) {
-      if (left_shift && left_alt) {
-        return MACRO(T(Comma));
-      } else if (left_shift) {
-        return MACRO(U(LeftShift), T(NonUsBackslashAndPipe));
-      } else {
-        return MACRO(T(Comma));
-      }
-    }
-    break;
-  case M_PERIOD_AND_GREATER_THAN:
-    if (keyToggledOn(keyState)) {
-      if (left_shift && left_alt) {
-        return MACRO(T(Period));
-      }
-      else if (left_shift) {
-        return MACRO(T(NonUsBackslashAndPipe));
-      } else {
-        return MACRO(T(Period));
-      }
-    }
-    break;
-  case M_SLASH_AND_QUESTIONMARK:
-    if (keyToggledOn(keyState)) {
-      if (left_shift) {
-        return MACRO(T(Minus));
-      } else {
-        return MACRO(D(LeftShift), T(7));
       }
     }
     break;
@@ -282,6 +285,12 @@ const macro_t *macroAction(uint8_t macroIndex, uint8_t keyState) {
 }
 
 void setup() {
+  Kaleidoscope.serialPort().begin(9600);
+  CS_KEYS(
+    kaleidoscope::plugin::CharShift::KeyPair(Key_Comma, FI_Key_LessThan),         // CS(0)
+    kaleidoscope::plugin::CharShift::KeyPair(Key_Period, FI_Key_GreaterThan),     // CS(1)
+    kaleidoscope::plugin::CharShift::KeyPair(FI_Key_Slash, FI_Key_QuestionMark),  // CS(2)
+  );
   Kaleidoscope.setup();
 }
 

@@ -48,3 +48,5 @@ Thumbs.db
 *.mov
 *.wmv
 
+MyAtreus/.vscode/arduino.json
+MyAtreus/.vscode/c_cpp_properties.json
