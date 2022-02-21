@@ -35,7 +35,6 @@
 enum {
   MACRO_VERSION_INFO,
   M_BACKTICK_AND_TILDE,
-  M_SEMICOLON_AND_COLON,
   M_BACKSLASH_AND_PIPE,
   M_CARET,
   M_PARENTHESIS,
@@ -94,7 +93,8 @@ enum CS_FI {
   COMMA_AND_LESS_THAN,
   PERIOD_AND_GREATER_THAN,
   SLASH_AND_QUESTION_MARK,
-  QUOTE_AND_DOUBLE_QUOTE
+  QUOTE_AND_DOUBLE_QUOTE,
+  COLON_AND_SEMICOLON,
 };
 
 /* *INDENT-OFF* */
@@ -108,7 +108,7 @@ KEYMAPS(
       
 
                                ,Key_Y       ,Key_U        ,Key_I                           ,Key_O                              ,Key_P
-                               ,Key_H       ,Key_J        ,Key_K                           ,Key_L                              ,M(M_SEMICOLON_AND_COLON)
+                               ,Key_H       ,Key_J        ,Key_K                           ,Key_L                              ,CS(CS_FI::COLON_AND_SEMICOLON)
       ,M(M_BACKSLASH_AND_PIPE) ,Key_N       ,Key_M        ,CS(CS_FI::COMMA_AND_LESS_THAN)  ,CS(CS_FI::PERIOD_AND_GREATER_THAN) ,CS(CS_FI::SLASH_AND_QUESTION_MARK)
       ,MO(OMEGA)               ,Key_Space   ,MO(FUN)      ,FI_Key_Minus                    ,CS(CS_FI::QUOTE_AND_DOUBLE_QUOTE)  ,Key_Enter
   ),
@@ -221,15 +221,6 @@ const macro_t *macroAction(uint8_t macroIndex, uint8_t keyState) {
       }
     }
     break;
-  case M_SEMICOLON_AND_COLON:
-    if (keyToggledOn(keyState)) {
-      if (left_shift) {
-        return MACRO(T(Period));
-      } else {
-        return MACRO(D(LeftShift), T(Comma));
-      }
-    }
-    break;
   case M_BACKSLASH_AND_PIPE:
     if (keyToggledOn(keyState)) {
       if (left_shift) {
@@ -281,7 +272,8 @@ void setup() {
     kaleidoscope::plugin::CharShift::KeyPair(Key_Comma, FI_Key_LessThan),         // CS(0)
     kaleidoscope::plugin::CharShift::KeyPair(Key_Period, FI_Key_GreaterThan),     // CS(1)
     kaleidoscope::plugin::CharShift::KeyPair(FI_Key_Slash, FI_Key_QuestionMark),  // CS(2)
-    kaleidoscope::plugin::CharShift::KeyPair(FI_Key_Quote, FI_Key_Doublequote),  // CS(3)
+    kaleidoscope::plugin::CharShift::KeyPair(FI_Key_Quote, FI_Key_Doublequote),   // CS(3)
+    kaleidoscope::plugin::CharShift::KeyPair(FI_Key_Semicolon, FI_Key_Colon),     // CS(4)
   );
   Kaleidoscope.setup();
 }
