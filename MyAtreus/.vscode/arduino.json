@@ -1,5 +1,0 @@
-{
-    "board": "keyboardio:avr:keyboardio_atreus",
-    "sketch": "MyAtreus.ino",
-    "port": "COM8"
-}
