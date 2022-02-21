@@ -37,7 +37,6 @@ enum {
   M_BACKTICK_AND_TILDE,
   M_SEMICOLON_AND_COLON,
   M_BACKSLASH_AND_PIPE,
-  M_QUOTE_AND_DOUBLEQUOTE,
   M_CARET,
   M_PARENTHESIS,
   M_ANGLES,
@@ -94,7 +93,8 @@ enum {
 enum CS_FI {
   COMMA_AND_LESS_THAN,
   PERIOD_AND_GREATER_THAN,
-  SLASH_AND_QUESTION_MARK
+  SLASH_AND_QUESTION_MARK,
+  QUOTE_AND_DOUBLE_QUOTE
 };
 
 /* *INDENT-OFF* */
@@ -110,7 +110,7 @@ KEYMAPS(
                                ,Key_Y       ,Key_U        ,Key_I                           ,Key_O                              ,Key_P
                                ,Key_H       ,Key_J        ,Key_K                           ,Key_L                              ,M(M_SEMICOLON_AND_COLON)
       ,M(M_BACKSLASH_AND_PIPE) ,Key_N       ,Key_M        ,CS(CS_FI::COMMA_AND_LESS_THAN)  ,CS(CS_FI::PERIOD_AND_GREATER_THAN) ,CS(CS_FI::SLASH_AND_QUESTION_MARK)
-      ,MO(OMEGA)               ,Key_Space   ,MO(FUN)      ,FI_Key_Minus                    ,M(M_QUOTE_AND_DOUBLEQUOTE)         ,Key_Enter
+      ,MO(OMEGA)               ,Key_Space   ,MO(FUN)      ,FI_Key_Minus                    ,CS(CS_FI::QUOTE_AND_DOUBLE_QUOTE)  ,Key_Enter
   ),
   [OMEGA] = KEYMAP_STACKED
   (
@@ -239,15 +239,6 @@ const macro_t *macroAction(uint8_t macroIndex, uint8_t keyState) {
       }
     }
     break;
-  case M_QUOTE_AND_DOUBLEQUOTE:
-    if (keyToggledOn(keyState)) {
-      if (left_shift) {
-        return MACRO(T(2));
-      } else {
-        return MACRO(T(Backslash));
-      }
-    }
-    break;
   case M_CARET:
     if (keyToggledOn(keyState)) {
       return MACRO(D(LeftShift), T(RightBracket), U(LeftShift), T(Space));
@@ -290,6 +281,7 @@ void setup() {
     kaleidoscope::plugin::CharShift::KeyPair(Key_Comma, FI_Key_LessThan),         // CS(0)
     kaleidoscope::plugin::CharShift::KeyPair(Key_Period, FI_Key_GreaterThan),     // CS(1)
     kaleidoscope::plugin::CharShift::KeyPair(FI_Key_Slash, FI_Key_QuestionMark),  // CS(2)
+    kaleidoscope::plugin::CharShift::KeyPair(FI_Key_Quote, FI_Key_Doublequote),  // CS(3)
   );
   Kaleidoscope.setup();
 }
