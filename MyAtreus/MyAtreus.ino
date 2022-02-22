@@ -35,7 +35,6 @@
 enum {
   MACRO_VERSION_INFO,
   M_BACKTICK_AND_TILDE,
-  M_BACKSLASH_AND_PIPE,
   M_CARET,
   M_PARENTHESIS,
   M_ANGLES,
@@ -79,6 +78,7 @@ enum {
 #define FI_Key_Star LSHIFT(Key_Backslash)
 #define FI_Key_QuestionMark LSHIFT(Key_Minus)
 #define FI_Key_Slash LSHIFT(Key_7)
+#define FI_Key_Backslash RALT(Key_Minus)
 #define Key_PA2 LALT(Key_Home)
 
 enum {
@@ -95,6 +95,7 @@ enum CS_FI {
   SLASH_AND_QUESTION_MARK,
   QUOTE_AND_DOUBLE_QUOTE,
   COLON_AND_SEMICOLON,
+  BACKSLASH_AND_PIPE,
 };
 
 /* *INDENT-OFF* */
@@ -107,10 +108,10 @@ KEYMAPS(
       ,Key_LeftControl         ,Key_LeftGui ,Key_Tab      ,Key_LeftShift     ,Key_Backspace               ,Key_LeftAlt
       
 
-                               ,Key_Y       ,Key_U        ,Key_I                           ,Key_O                              ,Key_P
-                               ,Key_H       ,Key_J        ,Key_K                           ,Key_L                              ,CS(CS_FI::COLON_AND_SEMICOLON)
-      ,M(M_BACKSLASH_AND_PIPE) ,Key_N       ,Key_M        ,CS(CS_FI::COMMA_AND_LESS_THAN)  ,CS(CS_FI::PERIOD_AND_GREATER_THAN) ,CS(CS_FI::SLASH_AND_QUESTION_MARK)
-      ,MO(OMEGA)               ,Key_Space   ,MO(FUN)      ,FI_Key_Minus                    ,CS(CS_FI::QUOTE_AND_DOUBLE_QUOTE)  ,Key_Enter
+                                     ,Key_Y       ,Key_U        ,Key_I                           ,Key_O                              ,Key_P
+                                     ,Key_H       ,Key_J        ,Key_K                           ,Key_L                              ,CS(CS_FI::COLON_AND_SEMICOLON)
+      ,CS(CS_FI::BACKSLASH_AND_PIPE) ,Key_N       ,Key_M        ,CS(CS_FI::COMMA_AND_LESS_THAN)  ,CS(CS_FI::PERIOD_AND_GREATER_THAN) ,CS(CS_FI::SLASH_AND_QUESTION_MARK)
+      ,MO(OMEGA)                     ,Key_Space   ,MO(FUN)      ,FI_Key_Minus                    ,CS(CS_FI::QUOTE_AND_DOUBLE_QUOTE)  ,Key_Enter
   ),
   [OMEGA] = KEYMAP_STACKED
   (
@@ -221,15 +222,6 @@ const macro_t *macroAction(uint8_t macroIndex, uint8_t keyState) {
       }
     }
     break;
-  case M_BACKSLASH_AND_PIPE:
-    if (keyToggledOn(keyState)) {
-      if (left_shift) {
-        return MACRO(U(LeftShift), D(RightAlt), T(NonUsBackslashAndPipe));
-      } else {
-        return MACRO(D(RightAlt), T(Minus));
-      }
-    }
-    break;
   case M_CARET:
     if (keyToggledOn(keyState)) {
       return MACRO(D(LeftShift), T(RightBracket), U(LeftShift), T(Space));
@@ -274,6 +266,7 @@ void setup() {
     kaleidoscope::plugin::CharShift::KeyPair(FI_Key_Slash, FI_Key_QuestionMark),  // CS(2)
     kaleidoscope::plugin::CharShift::KeyPair(FI_Key_Quote, FI_Key_Doublequote),   // CS(3)
     kaleidoscope::plugin::CharShift::KeyPair(FI_Key_Semicolon, FI_Key_Colon),     // CS(4)
+    kaleidoscope::plugin::CharShift::KeyPair(FI_Key_Backslash, FI_Key_Pipe),      // CS(5)
   );
   Kaleidoscope.setup();
 }
