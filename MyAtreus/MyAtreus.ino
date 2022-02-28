@@ -36,10 +36,6 @@ enum {
   MACRO_VERSION_INFO,
   M_BACKTICK_AND_TILDE,
   M_CARET,
-  M_PARENTHESIS,
-  M_ANGLES,
-  M_DOUBLE_EQUALS,
-  M_ALT_SHIFT_COMMA,
   M_ALT_SHIFT_X_T,
 };
 
@@ -102,10 +98,10 @@ enum CS_FI {
 KEYMAPS(
   [QWERTY] = KEYMAP_STACKED
   (
-       Key_Q                   ,Key_W       ,Key_E        ,Key_R             ,Key_T
-      ,LT(SCAND_AND_F_KEYS, A) ,Key_S       ,Key_D        ,Key_F             ,Key_G
-      ,Key_Z                   ,Key_X       ,Key_C        ,Key_V             ,Key_B                       ,M(M_BACKTICK_AND_TILDE)
-      ,Key_LeftControl         ,Key_LeftGui ,Key_Tab      ,Key_LeftShift     ,Key_Backspace               ,Key_LeftAlt
+       Key_Q                         ,Key_W       ,Key_E        ,Key_R                           ,Key_T
+      ,LT(SCAND_AND_F_KEYS, A)       ,Key_S       ,Key_D        ,Key_F                           ,Key_G
+      ,Key_Z                         ,Key_X       ,Key_C        ,Key_V                           ,Key_B                       ,M(M_BACKTICK_AND_TILDE)
+      ,Key_LeftControl               ,Key_LeftGui ,Key_Tab      ,Key_LeftShift                   ,Key_Backspace               ,Key_LeftAlt
       
 
                                      ,Key_Y       ,Key_U        ,Key_I                           ,Key_O                              ,Key_P
@@ -153,7 +149,7 @@ KEYMAPS(
   [SCAND_AND_F_KEYS] = KEYMAP_STACKED
   (
        XXX               ,XXX           ,XXX                ,XXX           ,XXX
-      ,XXX               ,XXX           ,XXX                ,XXX           ,XXX
+      ,XXX               ,XXX           ,XXX                ,___           ,XXX
       ,XXX               ,XXX           ,XXX                ,XXX           ,XXX             ,XXX
       ,XXX               ,XXX           ,XXX                ,Key_LeftShift ,XXX             ,Key_Escape
 
@@ -198,63 +194,70 @@ class ShiftBlocker : public Plugin {
 kaleidoscope::plugin::ShiftBlocker ShiftBlocker;
 
 KALEIDOSCOPE_INIT_PLUGINS(
-  Qukeys,
   Macros,
+  Qukeys,
+  ShiftBlocker,
   CharShift
 );
 
-const macro_t *macroAction(uint8_t macroIndex, uint8_t keyState) {
-  bool left_shift = kaleidoscope::Runtime.hid().keyboard().isModifierKeyActive(Key_LeftShift);
-  bool left_alt = kaleidoscope::Runtime.hid().keyboard().isModifierKeyActive(Key_LeftAlt);
-  switch (macroIndex) {
-  case MACRO_VERSION_INFO:
-    if (keyToggledOn(keyState)) {
+bool isShiftActive() {
+  bool shift_active = false;
+  for (Key key : kaleidoscope::live_keys.all()) {
+    if (key.isKeyboardShift())
+      shift_active = true;
+  }
+  return shift_active;
+}
+
+const macro_t *macroAction(uint8_t macro_id, KeyEvent &event) {
+  // All these macros only play when a key toggles on, so it's more efficient to
+  // just test for that once.
+
+  
+  if (keyToggledOn(event.state)) {
+    Kaleidoscope.serialPort().print("Inside macroAction: ");
+
+    switch (macro_id) {
+
+    case MACRO_VERSION_INFO:
       Macros.type(PSTR("Keyboardio Atreus - Kaleidoscope "));
       Macros.type(PSTR(BUILD_INFORMATION));
-    }
-    break;
-  case M_BACKTICK_AND_TILDE:
-    if (keyToggledOn(keyState)) {
-      if (left_shift) {
-        return MACRO(U(LeftShift), D(RightAlt), T(RightBracket), U(RightAlt), T(Space));
-      } else {
-        return MACRO(D(LeftShift), T(Equals), U(LeftShift), T(Space));
-      }
-    }
-    break;
-  case M_CARET:
-    if (keyToggledOn(keyState)) {
-      return MACRO(D(LeftShift), T(RightBracket), U(LeftShift), T(Space));
-    }
-    break;
-  case M_PARENTHESIS:
-    if (keyToggledOn(keyState)) {
-      return MACRO(D(LeftShift), T(8), T(9), U(LeftShift), T(LeftArrow));
-    }
-  case M_ANGLES:
-    if (keyToggledOn(keyState)) {
-      return MACRO(T(NonUsBackslashAndPipe), D(LeftShift), T(NonUsBackslashAndPipe), U(LeftShift), T(LeftArrow));
-    }
-    break;
-  case M_DOUBLE_EQUALS:
-    if (keyToggledOn(keyState)) {
-      return MACRO(D(LeftShift), T(0), T(0));
-    }
-    break;
-  case M_ALT_SHIFT_COMMA:
-    if (keyToggledOn(keyState)) {
-      return MACRO(D(LeftShift), D(LeftAlt), T(Comma)); 
-    }
-    break;
-  case M_ALT_SHIFT_X_T:
-    if (keyToggledOn(keyState)) {
-      return MACRO(D(LeftAlt), D(LeftShift), T(X), U(LeftAlt), U(LeftShift), T(T)); 
-    }
-    break;
-  default:
-    break;
-  }
+      break;
 
+    case M_BACKTICK_AND_TILDE:
+      Kaleidoscope.serialPort().println("Backtick and tilde");
+      // Check for any `shift` keys that are currently being held.
+      if (isShiftActive()) {
+        Kaleidoscope.serialPort().println("Shift down");
+        // If one or more `shift` keys are held, we can't use `MACRO()` because
+        // we need to disable ShiftBlocker when we're done.
+        ShiftBlocker.enable();
+        Macros.tap(RALT(Key_RightBracket));
+        Macros.tap(Key_Space);
+        ShiftBlocker.disable();
+      } else {
+        Kaleidoscope.serialPort().println("Shift up");
+        // It's more efficient to use a single `Tr()` with a key value that
+        // contains a modifier flag than to use separate commands for pressing
+        // and releasing the modifier.
+        return MACRO(Tr(LSHIFT(Key_Equals)), T(Space));
+      }
+      break;
+
+    case M_CARET:
+      Kaleidoscope.serialPort().println("Caret");
+      return MACRO(Tr(LSHIFT(Key_RightBracket)), T(Space));
+
+    case M_ALT_SHIFT_X_T:
+      // Modifier flag preprocessor macros are not sensitive to the order in
+      // which they are applied to the key value.
+      return MACRO(Tr(LALT(LSHIFT(Key_X))), T(T));
+
+    default:
+      Kaleidoscope.serialPort().println("Default");
+      break;
+    }
+  }
   return MACRO_NONE;
 }
 
@@ -268,6 +271,8 @@ void setup() {
     kaleidoscope::plugin::CharShift::KeyPair(FI_Key_Semicolon, FI_Key_Colon),     // CS(4)
     kaleidoscope::plugin::CharShift::KeyPair(FI_Key_Backslash, FI_Key_Pipe),      // CS(5)
   );
+  Qukeys.setMaxIntervalForTapRepeat(0);
+  Qukeys.setOverlapThreshold(100);
   Kaleidoscope.setup();
 }
 
